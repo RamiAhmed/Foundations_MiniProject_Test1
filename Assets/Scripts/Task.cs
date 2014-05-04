@@ -3,23 +3,9 @@ using System;
 using System.Collections;
 
 public class Task : BTObject  {
-
-	public enum TaskState {
-		TASK_WAITING,
-		TASK_RUNNING,
-		TASK_DONE,
-		TASK_CANCELLED,
-		TASK_ABORTED
-	}
 	
-	public TaskState CurrentState = TaskState.TASK_WAITING;
-
 	public Action Action { get; set; }
 	public Condition Condition { get; set; }
-	
-	public float Priority = 0.5f;
-
-
 
 	public void Initialize(GetAction action, GetCondition condition, float priority) {
 		this.Action = new Action(action);
@@ -57,7 +43,7 @@ public class Task : BTObject  {
 			this.Condition = null;
 			this.Action = null;
 
-			Destroy(this,0.1f);
+			Destroy(this, 0.1f);
 		}
 	}
 

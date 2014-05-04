@@ -5,15 +5,14 @@ using System.Collections.Generic;
 
 public class Sequence : BTObject {
 
-	public List<Task> TaskSequence { get; set; }
+	public List<BTObject> TaskSequence { get; set; }
 
-	private Task currentTask = null;
+	private BTObject currentTask = null;
 
 	public bool Result { get; set; }
 
-	//public bool bIsSequenceDone = false;
 
-	public void Initialize(List<Task> taskSequence) {
+	public void Initialize(List<BTObject> taskSequence) {
 		this.TaskSequence = taskSequence;
 		this.TaskSequence = this.TaskSequence.OrderByDescending( x => x.Priority ).ToList();
 
@@ -26,7 +25,10 @@ public class Sequence : BTObject {
 			Debug.LogWarning("Sequence has no Task Sequence list set");
 		}
 		else {
-			this.currentTask.StartObject();
+			if (this.CurrentState == TaskState.TASK_WAITING) { 
+				this.CurrentState = TaskState.TASK_RUNNING;
+				this.currentTask.StartObject();
+			}
 		}
 	}
 
@@ -37,17 +39,18 @@ public class Sequence : BTObject {
 				this.TaskSequence.RemoveAt(0);
 			}
 
-			Destroy(this,0.1f);
+			Destroy(this, 0.1f);
 		}
 	}
 
 	private void Update() {
-		if (!this.bDoneRunning && this.currentTask.bDoneRunning) {
-			if (this.currentTask.CurrentState == Task.TaskState.TASK_DONE) {
+		if (this.CurrentState == TaskState.TASK_RUNNING) {
+			if (this.currentTask.CurrentState == TaskState.TASK_DONE) {
 				this.currentTask = getNextTask();
 
 				if (this.currentTask == null) {
 					this.Result = true;
+					this.CurrentState = TaskState.TASK_DONE;
 					this.bDoneRunning = true;
 				}
 				else {
@@ -57,11 +60,12 @@ public class Sequence : BTObject {
 			else if (this.currentTask.CurrentState == Task.TaskState.TASK_ABORTED || this.currentTask.CurrentState == Task.TaskState.TASK_CANCELLED) {
 				this.Result = false;
 				this.bDoneRunning = true;
+				this.CurrentState = this.currentTask.CurrentState;
 			}
 		}
 	}
 
-	private Task getNextTask() {
+	private BTObject getNextTask() {
 		if (this.currentTask == null)
 			return null;
 		else {
