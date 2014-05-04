@@ -10,17 +10,23 @@ public abstract class BTObject : MonoBehaviour {
 		TASK_DONE,
 		TASK_CANCELLED,
 		TASK_ABORTED
-	}
+	};
+
+	public TaskState CurrentState = TaskState.TASK_WAITING;
+
+
+	public bool Looping = false;
+	public int Counter = 0;
+
+	protected int counterCount = 0;
 
 	public float Priority = 0.5f;
-	
-	public TaskState CurrentState = TaskState.TASK_WAITING;
 
 	public bool bDoneRunning = false;
 
 
 	public abstract void StartObject();
 
-	public abstract void RemoveSelf();
+	public abstract bool RemoveSelf();
 
 }

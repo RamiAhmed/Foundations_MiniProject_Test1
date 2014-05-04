@@ -28,6 +28,7 @@ public class Unit : MonoBehaviour {
 			
 			Sequence moveSequence = this.gameObject.AddComponent<Sequence>();
 			moveSequence.Initialize(taskList);
+			moveSequence.Looping = true;
 
 			ActionQueue.Add(moveSequence);
 		}
@@ -51,6 +52,8 @@ public class Unit : MonoBehaviour {
 			
 			Selector countSelector = this.gameObject.AddComponent<Selector>();
 			countSelector.Initialize(countingList);
+			countSelector.Looping = true;
+			countSelector.Counter = 3;
 			
 			ActionQueue.Add(countSelector);
 		}
@@ -107,8 +110,8 @@ public class Unit : MonoBehaviour {
 				ActionQueue[0].StartObject();
 			}
 			else {
-				ActionQueue[0].RemoveSelf();
-				ActionQueue.RemoveAt(0);
+				if (ActionQueue[0].RemoveSelf())
+					ActionQueue.RemoveAt(0);
 			}
 		}
 	}

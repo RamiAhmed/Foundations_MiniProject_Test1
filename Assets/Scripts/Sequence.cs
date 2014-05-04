@@ -25,20 +25,33 @@ public class Sequence : BTObject {
 		else {
 			if (this.CurrentState == TaskState.TASK_WAITING) { 
 				this.CurrentState = TaskState.TASK_RUNNING;
+				this.currentTask = this.TaskSequence[0];
 				this.currentTask.StartObject();
+
+				if (this.Counter > 1 && !this.Looping)
+					this.Looping = true;
 			}
 		}
 	}
 
-	public override void RemoveSelf() {
+	public override bool RemoveSelf() {
 		if (this.gameObject != null) {
-			while (this.TaskSequence.Count > 0) {
-				this.TaskSequence[0].RemoveSelf();
-				this.TaskSequence.RemoveAt(0);
+			if (this.Looping && (this.Counter <= 1 || this.counterCount < this.Counter)) {
+				//Debug.Log("Looping");
 			}
+			else {
+				while (this.TaskSequence.Count > 0) {
+					this.TaskSequence[0].RemoveSelf();
+					this.TaskSequence.RemoveAt(0);
+				}
 
-			Destroy(this, 0.1f);
+				Destroy(this, 0.1f);
+
+				return true;
+			}
 		}
+
+		return false;
 	}
 
 	private void Update() {
@@ -59,7 +72,23 @@ public class Sequence : BTObject {
 		}
 		else if (this.CurrentState != TaskState.TASK_WAITING) {
 			if (!this.bDoneRunning) {
-				this.bDoneRunning = true;
+				if (this.Looping) {
+					if (this.Counter <= 1 || this.counterCount < this.Counter) {
+						this.counterCount++;
+						this.CurrentState = TaskState.TASK_WAITING;
+
+						foreach (BTObject task in this.TaskSequence) {
+							task.bDoneRunning = false;
+							task.CurrentState = TaskState.TASK_WAITING;
+						}
+					}
+					else {
+						this.Looping = false;
+						this.bDoneRunning = true;
+					}
+				}
+				else 
+					this.bDoneRunning = true;
 			}
 		}
 	}
