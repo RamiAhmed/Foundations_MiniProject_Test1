@@ -37,7 +37,7 @@ public class Action  {
 		}
 		else {
 			Debug.LogWarning("Action has no OnAction set");
-			this.CurrentState = ActionState.ACTION_ABORTED;
+			this.CurrentState = ActionState.ACTION_CANCELLED;
 		}
 
 		return this.CurrentState;
