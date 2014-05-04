@@ -9,20 +9,18 @@ public class Sequence : BTObject {
 
 	private BTObject currentTask = null;
 
-	public bool Result { get; set; }
-
 
 	public void Initialize(List<BTObject> taskSequence) {
 		this.TaskSequence = taskSequence;
 		this.TaskSequence = this.TaskSequence.OrderByDescending( x => x.Priority ).ToList();
 
 		this.currentTask = this.TaskSequence[0];
-		this.Result = false;
 	}
 
 	public override void StartObject() {
 		if (this.TaskSequence == null || this.TaskSequence.Count <= 0) {
 			Debug.LogWarning("Sequence has no Task Sequence list set");
+			this.CurrentState = TaskState.TASK_CANCELLED;
 		}
 		else {
 			if (this.CurrentState == TaskState.TASK_WAITING) { 
@@ -49,18 +47,19 @@ public class Sequence : BTObject {
 				this.currentTask = getNextTask();
 
 				if (this.currentTask == null) {
-					this.Result = true;
 					this.CurrentState = TaskState.TASK_DONE;
-					this.bDoneRunning = true;
 				}
 				else {
 					this.currentTask.StartObject();
 				}
 			}
 			else if (this.currentTask.CurrentState == Task.TaskState.TASK_ABORTED || this.currentTask.CurrentState == Task.TaskState.TASK_CANCELLED) {
-				this.Result = false;
-				this.bDoneRunning = true;
 				this.CurrentState = this.currentTask.CurrentState;
+			}
+		}
+		else if (this.CurrentState != TaskState.TASK_WAITING) {
+			if (!this.bDoneRunning) {
+				this.bDoneRunning = true;
 			}
 		}
 	}

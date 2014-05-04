@@ -101,14 +101,6 @@ public class Unit : MonoBehaviour {
 
 
 		}
-		/*
-		if (Random.value < 0.01f) {
-			Task moveTask = this.gameObject.AddComponent<Task>();
-			//moveTask.Initialize((() => {return ActionMove(Random.Range(0,3));}), Random.value);
-			moveTask.Initialize(ActionMove, Random.value);
-
-			ActionQueue.Add(moveTask);
-		}*/
 
 		if (ActionQueue.Count > 0) {
 			if (!ActionQueue[0].bDoneRunning) {

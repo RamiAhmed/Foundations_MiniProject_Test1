@@ -9,20 +9,18 @@ public class Selector : BTObject {
 	
 	private BTObject currentTask = null;
 
-	public bool Result { get; set; }
-
 
 	public void Initialize(List<BTObject> taskSelectors) {
 		this.TaskSelectors = taskSelectors;
 		this.TaskSelectors = this.TaskSelectors.OrderByDescending( x => x.Priority ).ToList();
 
 		this.currentTask = this.TaskSelectors[0];
-		this.Result = false;
 	}
 	
 	public override void StartObject() {
 		if (this.TaskSelectors == null || this.TaskSelectors.Count <= 0) {
 			Debug.LogWarning("Selector has no Task Selector list set");
+			this.CurrentState = TaskState.TASK_CANCELLED;
 		}
 		else {
 			if (this.CurrentState == TaskState.TASK_WAITING) { 
@@ -49,18 +47,19 @@ public class Selector : BTObject {
 				this.currentTask = getNextTask();
 
 				if (this.currentTask == null) {
-					this.Result = false;
 					this.CurrentState = this.currentTask.CurrentState;
-					this.bDoneRunning = true;
 				}
 				else {
 					this.currentTask.StartObject();
 				}
 			}
 			else if (this.currentTask.CurrentState == Task.TaskState.TASK_DONE) {
-				this.Result = true;
-				this.bDoneRunning = true;
 				this.CurrentState = TaskState.TASK_DONE;
+			}
+		}
+		else if (this.CurrentState != TaskState.TASK_WAITING) {
+			if (!this.bDoneRunning) {
+				this.bDoneRunning = true;
 			}
 		}
 	}
