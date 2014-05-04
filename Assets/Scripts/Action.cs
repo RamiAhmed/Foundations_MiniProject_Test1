@@ -22,14 +22,12 @@ public class Action  {
 		this.AddAction(action);
 	}
 
-
 	public void AddAction(GetAction action) {
 		this.OnAction += action;
 	}
 	public void RemoveAction(GetAction action) {
 		this.OnAction -= action;
 	}
-
 
 	public ActionState RunAction() {
 		if (this.OnAction != null) {

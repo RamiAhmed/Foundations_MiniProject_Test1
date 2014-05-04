@@ -9,6 +9,7 @@ public class Condition {
 
 	public bool Result { get; set; }
 
+
 	public Condition(GetCondition condition) {
 		this.AddCondition(condition);
 	}
