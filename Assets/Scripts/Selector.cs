@@ -10,11 +10,22 @@ public class Selector : BTObject {
 	private BTObject currentTask = null;
 
 
-	public void Initialize(List<BTObject> taskSelectors) {
+	public Selector Initialize(List<BTObject> taskSelectors) {
 		this.TaskSelectors = taskSelectors;
 		this.TaskSelectors = this.TaskSelectors.OrderByDescending( x => x.Priority ).ToList();
 
 		this.currentTask = this.TaskSelectors[0];
+
+		return this;
+	}
+
+	public Selector Initialize(params BTObject[] taskObjects) {
+		this.TaskSelectors = new List<BTObject>();
+		foreach (BTObject obj in taskObjects) {
+			this.TaskSelectors.Add(obj);
+		}
+		
+		return Initialize(this.TaskSelectors);
 	}
 	
 	public override void StartObject() {

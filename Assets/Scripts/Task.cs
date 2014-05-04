@@ -8,26 +8,34 @@ public class Task : BTObject  {
 	public Condition Condition { get; set; }
 
 
-	public void Initialize(GetAction action, GetCondition condition, float priority) {
+	public Task Initialize(GetAction action, GetCondition condition, float priority) {
 		this.Action = new Action(action);
 		this.Condition = new Condition(condition);
 		this.Priority = priority;
+
+		return this;
 	}
 
-	public void Initialize(GetAction action, GetCondition condition) {
+	public Task Initialize(GetAction action, GetCondition condition) {
 		this.Action = new Action(action);
 		this.Condition = new Condition(condition);
+
+		return this;
 	}
 
-	public void Initialize(GetAction action, float priority) {
+	public Task Initialize(GetAction action, float priority) {
 		this.Action = new Action(action);
 		this.Condition = null;
 		this.Priority = priority;
+
+		return this;
 	}
 
-	public void Initialize(GetAction action) {
+	public Task Initialize(GetAction action) {
 		this.Action = new Action(action);
 		this.Condition = null;
+
+		return this;
 	}
 
 

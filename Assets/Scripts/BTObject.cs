@@ -18,7 +18,7 @@ public abstract class BTObject : MonoBehaviour {
 	public bool Looping = false;
 	public int Counter = 0;
 
-	protected int counterCount = 0;
+	protected int counterCount = 1;
 
 	public float Priority = 0.5f;
 

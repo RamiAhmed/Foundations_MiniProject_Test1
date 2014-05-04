@@ -101,8 +101,22 @@ public class Unit : MonoBehaviour {
 			fullSeq.Initialize(sequenceList);
 
 			ActionQueue.Add(fullSeq);
+		}
+		else if (Input.GetKeyDown(KeyCode.LeftControl) || Input.GetKeyDown(KeyCode.RightControl)) {
+			Sequence newSeq = this.gameObject.AddComponent<Sequence>().Initialize( new[] {
+				this.gameObject.AddComponent<Task>().Initialize(() => { Debug.Log("Do"); return Action.ActionState.ACTION_DONE; }, () => { return Random.value < 0.75f; }),
+				this.gameObject.AddComponent<Task>().Initialize(() => { Debug.Log("Re"); return Action.ActionState.ACTION_DONE; }, () => { return Random.value < 0.75f; }),
+				this.gameObject.AddComponent<Task>().Initialize(() => { Debug.Log("Mi"); return Action.ActionState.ACTION_DONE; }, () => { return Random.value < 0.75f; }),
+				this.gameObject.AddComponent<Task>().Initialize(() => { Debug.Log("Fa"); return Action.ActionState.ACTION_DONE; }, () => { return Random.value < 0.75f; }),
+				this.gameObject.AddComponent<Task>().Initialize(() => { Debug.Log("So"); return Action.ActionState.ACTION_DONE; }, () => { return Random.value < 0.75f; }),
+				this.gameObject.AddComponent<Task>().Initialize(() => { Debug.Log("La"); return Action.ActionState.ACTION_DONE; }, () => { return Random.value < 0.75f; }),
+				this.gameObject.AddComponent<Task>().Initialize(() => { Debug.Log("Si"); return Action.ActionState.ACTION_DONE; }, () => { return Random.value < 0.75f; }),
+				this.gameObject.AddComponent<Task>().Initialize(() => { Debug.Log("Do"); return Action.ActionState.ACTION_DONE; }, () => { return Random.value < 0.75f; })
+			});
+			newSeq.Counter = 2;
 
 
+			ActionQueue.Add(newSeq);
 		}
 
 		if (ActionQueue.Count > 0) {

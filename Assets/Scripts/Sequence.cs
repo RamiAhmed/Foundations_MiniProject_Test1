@@ -10,11 +10,22 @@ public class Sequence : BTObject {
 	private BTObject currentTask = null;
 
 
-	public void Initialize(List<BTObject> taskSequence) {
+	public Sequence Initialize(List<BTObject> taskSequence) {
 		this.TaskSequence = taskSequence;
 		this.TaskSequence = this.TaskSequence.OrderByDescending( x => x.Priority ).ToList();
 
 		this.currentTask = this.TaskSequence[0];
+
+		return this;
+	}
+
+	public Sequence Initialize(params BTObject[] taskObjects) {
+		this.TaskSequence = new List<BTObject>();
+		foreach (BTObject obj in taskObjects) {
+			this.TaskSequence.Add(obj);
+		}
+
+		return Initialize(this.TaskSequence);
 	}
 
 	public override void StartObject() {
