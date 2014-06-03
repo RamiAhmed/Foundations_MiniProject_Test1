@@ -15,15 +15,13 @@ public class GameController : MonoBehaviour {
 
 	public float GameTime = 0f;
 
-	// Use this for initialization
-	void Start () {
-
-	}
-
 	// Update is called once per frame
 	void Update () {
 		if (CurrentState == GameState.PLAYING) {
 			GameTime += Time.deltaTime;
+		}
+		else if (CurrentState == GameState.ENDING) {
+			Application.Quit();
 		}
 	}
 

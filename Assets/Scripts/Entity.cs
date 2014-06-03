@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class Entity : MonoBehaviour {
 
+	#region PUBLIC_VARIABLES
+
 	public string Name = "Entity",
 				 Class = "Entity";
 	
@@ -59,6 +61,8 @@ public class Entity : MonoBehaviour {
 		AttackSounds = new List<AudioClip>(), 
 		DeathSounds = new List<AudioClip>(), 
 		BeingHitSounds = new List<AudioClip>();
+
+	public Texture2D HealthbarTexture = null;
 	
 	[HideInInspector]
 	public bool Selected = false,
@@ -67,22 +71,50 @@ public class Entity : MonoBehaviour {
 	[HideInInspector]
 	public Entity lastAttacker = null,
 				  attackTarget = null;
-	
+
+	#endregion
+
+	#region PRIVATE_AND_PROTECTED_VARIABLES	
 	
 	protected float lastAttack = 0f;
 	protected float meleeDistance = 5f;
 	protected float moraleLevel = 100f;
-	
+	protected GameController _gameController;
+	protected Camera _camRef = null;
+
 	//private Vector3 targetPosition = Vector3.zero;
 	private Animation animation;	
 	private Dictionary<string, AudioSource> audioSources;
-	private GameController _gameController;
 	private bool isMoving = false;	
 	private float lastMoraleRegenerate = 0f;
 
+	#endregion
+
 	#region PRIVATE_METHODS 
+	
+	void OnGUI() {
+		if (_gameController.CurrentState == GameController.GameState.PLAYING || _gameController.CurrentState == GameController.GameState.PAUSED) {
+			if (HealthbarTexture != null) {
+				if (!this.IsDead) {
+					float width = 100f, height = 25f;
+					
+					Vector3 healthBarPos = _camRef.WorldToScreenPoint(new Vector3(0f, 1.5f, 0f) + this.transform.position);
+					float barWidth = width * (this.CurrentHitPoints / this.MaxHitPoints);
+					
+					GUI.BeginGroup(new Rect(healthBarPos.x - (width/2f), Screen.height - healthBarPos.y - (height/2f), barWidth, height));
+					GUI.DrawTexture(new Rect(0f, 0f, width, height), HealthbarTexture, ScaleMode.StretchToFill);
+					GUI.EndGroup();
+				}
+			}
+			else {
+				Debug.LogWarning("Healthbar texture has not been added to " + this.Name);
+			}
 
-
+			float nameWidth = 75f, nameHeight = 25f;
+			Vector3 textPos = _camRef.WorldToScreenPoint(new Vector3(0f, 2f, 0f) + this.transform.position);
+			GUI.Label(new Rect(textPos.x - (nameWidth/2f), Screen.height - textPos.y - (nameHeight/2f), nameWidth, nameHeight), this.Name);
+		}
+	}
 
 	#endregion
 
@@ -100,6 +132,15 @@ public class Entity : MonoBehaviour {
 			addAudioSource("Attack", AttackSounds);
 		if (BeingHitSounds.Count > 0) 
 			addAudioSource("BeingHit", BeingHitSounds);
+
+		_camRef = Camera.main;
+		if (_camRef == null)
+			_camRef = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+
+		if (_camRef == null)
+			Debug.LogWarning("Could not identify camera.");
+
+		this.CurrentHitPoints = this.MaxHitPoints;
 	}
 
 	#region VIRTUAL_METHODS 
@@ -131,8 +172,9 @@ public class Entity : MonoBehaviour {
 	// FixedUpdate is called once per time step
 	protected virtual void FixedUpdate() {}
 
-	#endregion
 
+	#endregion
+	
 
 	#region PUBLIC_METHODS
 	
@@ -163,12 +205,27 @@ public class Entity : MonoBehaviour {
 	public void MoveTo(Vector3 position) {
 		if (position.sqrMagnitude > 0f) {
 
-			Vector3 direction = (this.transform.position - position).normalized;
+			Vector3 direction = (position - this.transform.position).normalized;
 			Vector3 speed = direction * Time.deltaTime * MovementSpeed;
 
-			this.transform.Translate(speed);
+			//this.transform.Translate(speed);
+			this.transform.position = speed + this.transform.position;
 			this.transform.LookAt(position);
 
+			if (!isMoving)
+				isMoving = true;
+		}
+	}
+
+	public void Flee() {
+		if (this.attackTarget != null && !this.attackTarget.IsDead) {
+			Vector3 direction = (-(this.attackTarget.transform.position - this.transform.position)).normalized;
+			Vector3 speed = direction * Time.deltaTime * MovementSpeed;
+			
+			//this.transform.Translate(speed);
+			this.transform.position = speed + this.transform.position;
+			this.transform.LookAt(direction);
+			
 			if (!isMoving)
 				isMoving = true;
 		}
@@ -259,6 +316,9 @@ public class Entity : MonoBehaviour {
 				if (opponent.lastAttacker == null) {
 					opponent.lastAttacker = this;
 				}
+
+				if (this.attackTarget != opponent) 
+					this.attackTarget = opponent;
 				
 				if (animation != null) {
 					animation.Play(GetAttackAnimation());

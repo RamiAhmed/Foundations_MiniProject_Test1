@@ -9,10 +9,26 @@ public class Selector : BTObject {
 	
 	private BTObject currentTask = null;
 
+	public Selector Initialize(List<BTObject> taskSelectors, string name, bool bLooping, int counter) {
+		this.Counter = counter;
+		
+		return Initialize(taskSelectors, name, bLooping);
+	}
+
+	public Selector Initialize(List<BTObject> taskSelectors, string name, bool bLooping) {
+		this.Looping = bLooping;
+		
+		return Initialize(taskSelectors, name);
+	}
+
+	public Selector Initialize(List<BTObject> taskSelectors, string name) {
+		this.BTName = name;
+
+		return Initialize(taskSelectors);
+	}
 
 	public Selector Initialize(List<BTObject> taskSelectors) {
-		this.TaskSelectors = taskSelectors;
-		this.TaskSelectors = this.TaskSelectors.OrderByDescending( x => x.Priority ).ToList();
+		this.TaskSelectors = taskSelectors.OrderByDescending( x => x.Priority ).ToList();
 
 		this.currentTask = this.TaskSelectors[0];
 
@@ -20,12 +36,13 @@ public class Selector : BTObject {
 	}
 
 	public Selector Initialize(params BTObject[] taskObjects) {
-		this.TaskSelectors = new List<BTObject>();
-		foreach (BTObject obj in taskObjects) {
-			this.TaskSelectors.Add(obj);
-		}
+		List<BTObject> newList = new List<BTObject>();
+		/*foreach (BTObject obj in taskObjects) {
+			newList.Add(obj);
+		}*/
+		newList.AddRange(taskObjects);
 		
-		return Initialize(this.TaskSelectors);
+		return Initialize(newList);
 	}
 	
 	public override void StartObject() {
@@ -41,6 +58,12 @@ public class Selector : BTObject {
 
 				if (this.Counter > 1 && !this.Looping)
 					this.Looping = true;
+
+				if (BTName == "BTObject")
+					BTName = "Selector";
+				
+				if (bPaused)
+					bPaused = false;
 			}
 		}
 	}
@@ -66,12 +89,16 @@ public class Selector : BTObject {
 	}
 
 	private void Update() {
+		if (bPaused)
+			return;
+
 		if (this.CurrentState == TaskState.TASK_RUNNING) {
 			if (this.currentTask.CurrentState == Task.TaskState.TASK_ABORTED || this.currentTask.CurrentState == Task.TaskState.TASK_CANCELLED) {
 				this.currentTask = getNextTask();
 
 				if (this.currentTask == null) {
-					this.CurrentState = this.currentTask.CurrentState;
+					//this.CurrentState = this.currentTask.CurrentState;
+					this.CurrentState = TaskState.TASK_ABORTED;
 				}
 				else {
 					this.currentTask.StartObject();

@@ -7,6 +7,36 @@ public class Task : BTObject  {
 	public Action Action { get; set; }
 	public Condition Condition { get; set; }
 
+	public Task Initialize(GetAction action, GetCondition condition, float priority, string name, bool bLooping, int counter) {
+		this.Action = new Action(action);
+		this.Condition = new Condition(condition);
+		this.Priority = priority;
+		this.BTName = name;
+		this.Looping = bLooping;
+		this.Counter = counter;
+		
+		return this;
+	}
+
+	public Task Initialize(GetAction action, GetCondition condition, float priority, string name, bool bLooping) {
+		this.Action = new Action(action);
+		this.Condition = new Condition(condition);
+		this.Priority = priority;
+		this.BTName = name;
+		this.Looping = bLooping;
+		
+		return this;
+	}
+
+	public Task Initialize(GetAction action, GetCondition condition, float priority, string name) {
+		this.Action = new Action(action);
+		this.Condition = new Condition(condition);
+		this.Priority = priority;
+		this.BTName = name;
+
+		return this;
+	}
+
 	public Task Initialize(GetAction action, GetCondition condition, float priority) {
 		this.Action = new Action(action);
 		this.Condition = new Condition(condition);
@@ -45,6 +75,12 @@ public class Task : BTObject  {
 
 				if (this.Counter > 1 && !this.Looping)
 					this.Looping = true;
+
+				if (BTName == "BTObject")
+					BTName = "Task";
+				
+				if (bPaused)
+					bPaused = false;
 			}
 		}
 	}
@@ -80,6 +116,9 @@ public class Task : BTObject  {
 	}
 
 	private void Update() {
+		if (bPaused)
+			return;
+
 		if (this.CurrentState == TaskState.TASK_RUNNING) {
 			if (this.Action != null) {
 				if (this.Condition != null) {

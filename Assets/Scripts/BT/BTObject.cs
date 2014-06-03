@@ -24,6 +24,10 @@ public abstract class BTObject : MonoBehaviour {
 
 	public bool bDoneRunning = false;
 
+	public string BTName = "BTObject";
+
+	public bool bPaused = false;
+
 
 	public abstract void StartObject();
 

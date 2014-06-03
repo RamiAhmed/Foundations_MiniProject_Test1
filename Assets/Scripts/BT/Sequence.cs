@@ -9,10 +9,26 @@ public class Sequence : BTObject {
 
 	private BTObject currentTask = null;
 
+	public Sequence Initialize(List<BTObject> taskSequence, string name, bool bLooping, int counter) {
+		this.Counter = counter;
+		
+		return Initialize(taskSequence, name, bLooping);
+	}
+
+	public Sequence Initialize(List<BTObject> taskSequence, string name, bool bLooping) {
+		this.Looping = bLooping;
+		
+		return Initialize(taskSequence, name);
+	}
+
+	public Sequence Initialize(List<BTObject> taskSequence, string name) {
+		this.BTName = name;
+
+		return Initialize(taskSequence);
+	}
 
 	public Sequence Initialize(List<BTObject> taskSequence) {
-		this.TaskSequence = taskSequence;
-		this.TaskSequence = this.TaskSequence.OrderByDescending( x => x.Priority ).ToList();
+		this.TaskSequence = taskSequence.OrderByDescending( x => x.Priority ).ToList();
 
 		this.currentTask = this.TaskSequence[0];
 
@@ -20,12 +36,13 @@ public class Sequence : BTObject {
 	}
 
 	public Sequence Initialize(params BTObject[] taskObjects) {
-		this.TaskSequence = new List<BTObject>();
-		foreach (BTObject obj in taskObjects) {
-			this.TaskSequence.Add(obj);
-		}
+		List<BTObject> newList = new List<BTObject>();
+		/*foreach (BTObject obj in taskObjects) {
+			newList.Add(obj);
+		}*/
+		newList.AddRange(taskObjects);
 
-		return Initialize(this.TaskSequence);
+		return Initialize(newList);
 	}
 
 	public override void StartObject() {
@@ -41,6 +58,12 @@ public class Sequence : BTObject {
 
 				if (this.Counter > 1 && !this.Looping)
 					this.Looping = true;
+
+				if (BTName == "BTObject")
+					BTName = "Sequence";
+				
+				if (bPaused)
+					bPaused = false;
 			}
 		}
 	}
@@ -66,6 +89,9 @@ public class Sequence : BTObject {
 	}
 
 	private void Update() {
+		if (bPaused)
+			return;
+
 		if (this.CurrentState == TaskState.TASK_RUNNING) {
 			if (this.currentTask.CurrentState == TaskState.TASK_DONE) {
 				this.currentTask = getNextTask();
