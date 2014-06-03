@@ -53,6 +53,9 @@ public class Entity : MonoBehaviour {
 	
 	[Range(0f, 100f)]
 	public float MoralePointsPerSecond = 0.01f; 
+
+	[Range(0f, 10f)]
+	public float HitPointsPerSecond = 0.05f;
 	
 	public string WalkAnimation = "", 
 				  AttackAnimation = "";
@@ -88,6 +91,7 @@ public class Entity : MonoBehaviour {
 	private Dictionary<string, AudioSource> audioSources;
 	private bool isMoving = false;	
 	private float lastMoraleRegenerate = 0f;
+	private float lastHPRegenerate = 0f;
 	private float maxMoraleLevel = 0f;
 
 	#endregion
@@ -181,6 +185,9 @@ public class Entity : MonoBehaviour {
 
 				if (this.moraleLevel + this.MoralePointsPerSecond <= this.maxMoraleLevel)
 					this.moraleLevel += this.MoralePointsPerSecond;
+
+				if (this.CurrentHitPoints + this.HitPointsPerSecond <= this.MaxHitPoints) 
+					this.CurrentHitPoints += this.HitPointsPerSecond;
 			}
 		}
 
