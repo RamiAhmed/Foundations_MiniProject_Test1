@@ -46,13 +46,19 @@ public class GameController : MonoBehaviour {
 			if (!GUI.skin.box.wordWrap)
 				GUI.skin.box.wordWrap = true;
 
-			GameObject winner = UnitParent.transform.GetChild(0).gameObject;
-			string winnerName = winner.GetComponent<BT_Unit>() != null ? "BT Unit" : "FSM Unit";
-			string winnerHP = winner.GetComponent<Entity>().CurrentHitPoints.ToString("F0");
-			string winnerHPPercentage = (winner.GetComponent<Entity>().CurrentHitPoints / winner.GetComponent<Entity>().MaxHitPoints).ToString("F1") + "%";
+			if (UnitParent.transform.childCount > 0) {
+				GameObject winner = UnitParent.transform.GetChild(0).gameObject;
+				string winnerName = winner.GetComponent<BT_Unit>() != null ? "BT Unit" : "FSM Unit";
+				string winnerHP = winner.GetComponent<Entity>().CurrentHitPoints.ToString("F0");
+				string winnerHPPercentage = (winner.GetComponent<Entity>().CurrentHitPoints / winner.GetComponent<Entity>().MaxHitPoints).ToString("F1") + "%";
 
-			string endString = "The game has ended.\nThe winner was " + winnerName + ".\nThe winner has " + winnerHP + " HP (" + winnerHPPercentage + ") left.\n The fight took " + GameTime.ToString("F1") + " seconds.";
-			GUI.Box(new Rect((Screen.width/2f) - (endWidth/2f), (Screen.height/2f) - (endHeight/2f), endWidth, endHeight), endString);
+				string endString = "The game has ended.\nThe winner was " + winnerName + ".\nThe winner has " + winnerHP + " HP (" + winnerHPPercentage + ") left.\n The fight took " + GameTime.ToString("F1") + " seconds.";
+				GUI.Box(new Rect((Screen.width/2f) - (endWidth/2f), (Screen.height/2f) - (endHeight/2f), endWidth, endHeight), endString);
+			}
+			else {
+				string endString = "The game has ended.\nThere was no winner, as both died.";
+				GUI.Box(new Rect((Screen.width/2f) - (endWidth/2f), (Screen.height/2f) - (endHeight/2f), endWidth, endHeight), endString);
+			}
 		}
 
 		GUILayout.BeginArea(new Rect(5f, 5f, Screen.width-10f, 50f));

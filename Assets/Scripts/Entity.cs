@@ -63,6 +63,7 @@ public class Entity : MonoBehaviour {
 		BeingHitSounds = new List<AudioClip>();
 
 	public Texture2D HealthbarTexture = null;
+	public Texture2D MoraleBarTexture = null;
 	
 	[HideInInspector]
 	public bool Selected = false,
@@ -99,7 +100,7 @@ public class Entity : MonoBehaviour {
 				if (!this.IsDead) {
 					float width = 75f, height = 25f;
 					
-					Vector3 healthBarPos = _camRef.WorldToScreenPoint(new Vector3(0f, 1.5f, 0f) + this.transform.position);
+					Vector3 healthBarPos = _camRef.WorldToScreenPoint(new Vector3(0f, 1.4f, 0f) + this.transform.position);
 					float barWidth = width * (this.CurrentHitPoints / this.MaxHitPoints);
 					
 					GUI.BeginGroup(new Rect(healthBarPos.x - (width/2f), Screen.height - healthBarPos.y - (height/2f), barWidth, height));
@@ -111,8 +112,21 @@ public class Entity : MonoBehaviour {
 				Debug.LogWarning("Healthbar texture has not been added to " + this.Name);
 			}
 
+			if (MoraleBarTexture != null) {
+				if (!this.IsDead) {
+					float width = 75f, height = 25f;
+					
+					Vector3 moraleBarPos = _camRef.WorldToScreenPoint(new Vector3(0f, 2.25f, 0f) + this.transform.position);
+					float barWidth = width * (this.moraleLevel / this.maxMoraleLevel);
+					
+					GUI.BeginGroup(new Rect(moraleBarPos.x - (width/2f), Screen.height - moraleBarPos.y - (height/2f), barWidth, height));
+					GUI.DrawTexture(new Rect(0f, 0f, width, height), MoraleBarTexture, ScaleMode.StretchToFill);
+					GUI.EndGroup();
+				}
+			}
+
 			float nameWidth = 75f, nameHeight = 25f;
-			Vector3 textPos = _camRef.WorldToScreenPoint(new Vector3(0f, 2f, 0f) + this.transform.position);
+			Vector3 textPos = _camRef.WorldToScreenPoint(new Vector3(0f, 3f, 0f) + this.transform.position);
 			GUI.Label(new Rect(textPos.x - (nameWidth/2f), Screen.height - textPos.y - (nameHeight/2f), nameWidth, nameHeight), this.Name);
 		}
 	}
@@ -143,6 +157,7 @@ public class Entity : MonoBehaviour {
 
 		this.CurrentHitPoints = this.MaxHitPoints;
 		this.maxMoraleLevel = this.MaxHitPoints;
+		this.moraleLevel = this.maxMoraleLevel;
 	}
 
 	#region VIRTUAL_METHODS 
@@ -161,13 +176,11 @@ public class Entity : MonoBehaviour {
 		}
 
 		if (_gameController.CurrentState == GameController.GameState.PLAYING) {
-			if (this.moraleLevel < 100f) {
-				if (_gameController.GameTime - this.lastMoraleRegenerate > 1f) {
-					this.lastMoraleRegenerate = _gameController.GameTime;
+			if (_gameController.GameTime - this.lastMoraleRegenerate > 1f) {
+				this.lastMoraleRegenerate = _gameController.GameTime;
 
-					if (this.moraleLevel + this.MoralePointsPerSecond <= this.maxMoraleLevel)
-						this.moraleLevel += this.MoralePointsPerSecond;
-				}
+				if (this.moraleLevel + this.MoralePointsPerSecond <= this.maxMoraleLevel)
+					this.moraleLevel += this.MoralePointsPerSecond;
 			}
 		}
 
