@@ -1,0 +1,240 @@
+fileFormatVersion: 2
+guid: 346ec721b21ffc94aabf9c9fb6693980
+ModelImporter:
+  serializedVersion: 16
+  fileIDToRecycleName:
+    100000: ikHandle1
+    100002: ikHandle2
+    100004: ikHandle3
+    100006: ikHandle4
+    100008: joint1
+    100010: joint10
+    100012: joint11
+    100014: joint12
+    100016: joint13
+    100018: joint14
+    100020: joint15
+    100022: joint2
+    100024: joint3
+    100026: joint4
+    100028: joint5
+    100030: joint6
+    100032: joint7
+    100034: joint8
+    100036: joint9
+    100038: L_foot
+    100040: L_hand_control
+    100042: pikeman
+    100044: polySurface2
+    100046: polySurface4
+    100048: polySurface5
+    100050: polySurface6
+    100052: polySurface7
+    100054: polySurface8
+    100056: polySurface9
+    100058: r_foot
+    100060: R_hand_control
+    100062: //RootNode
+    100064: spar
+    400000: ikHandle1
+    400002: ikHandle2
+    400004: ikHandle3
+    400006: ikHandle4
+    400008: joint1
+    400010: joint10
+    400012: joint11
+    400014: joint12
+    400016: joint13
+    400018: joint14
+    400020: joint15
+    400022: joint2
+    400024: joint3
+    400026: joint4
+    400028: joint5
+    400030: joint6
+    400032: joint7
+    400034: joint8
+    400036: joint9
+    400038: L_foot
+    400040: L_hand_control
+    400042: pikeman
+    400044: polySurface2
+    400046: polySurface4
+    400048: polySurface5
+    400050: polySurface6
+    400052: polySurface7
+    400054: polySurface8
+    400056: polySurface9
+    400058: r_foot
+    400060: R_hand_control
+    400062: //RootNode
+    400064: spar
+    2300000: polySurface4
+    2300002: polySurface5
+    2300004: polySurface6
+    2300006: polySurface7
+    2300008: polySurface8
+    2300010: polySurface9
+    2300012: spar
+    3300000: polySurface4
+    3300002: polySurface5
+    3300004: polySurface6
+    3300006: polySurface7
+    3300008: polySurface8
+    3300010: polySurface9
+    3300012: spar
+    4300000: polySurface6
+    4300002: polySurface7
+    4300004: polySurface8
+    4300006: polySurface9
+    4300008: polySurface4
+    4300010: polySurface5
+    4300012: spar
+    7400000: PikemanAttack
+    9500000: //RootNode
+    11100000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: PikemanAttack
+      takeName: Take 001
+      firstFrame: 1
+      lastFrame: 33
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: ikHandle1
+        weight: 1
+      - path: ikHandle2
+        weight: 1
+      - path: ikHandle3
+        weight: 1
+      - path: ikHandle4
+        weight: 1
+      - path: L_foot
+        weight: 1
+      - path: L_foot/polySurface8
+        weight: 1
+      - path: L_hand_control
+        weight: 1
+      - path: L_hand_control/polySurface7
+        weight: 1
+      - path: pikeman
+        weight: 1
+      - path: pikeman/joint2
+        weight: 1
+      - path: pikeman/joint2/joint1
+        weight: 1
+      - path: pikeman/joint2/joint3
+        weight: 1
+      - path: pikeman/joint2/joint3/joint4
+        weight: 1
+      - path: pikeman/joint2/joint3/joint4/joint5
+        weight: 1
+      - path: pikeman/joint2/joint6
+        weight: 1
+      - path: pikeman/joint2/joint6/joint7
+        weight: 1
+      - path: pikeman/joint2/joint6/joint7/joint8
+        weight: 1
+      - path: pikeman/joint2/joint6/joint7/joint8/joint9
+        weight: 1
+      - path: pikeman/joint2/joint6/joint10
+        weight: 1
+      - path: pikeman/joint2/joint6/joint10/joint11
+        weight: 1
+      - path: pikeman/joint2/joint6/joint10/joint11/joint12
+        weight: 1
+      - path: pikeman/joint2/joint13
+        weight: 1
+      - path: pikeman/joint2/joint13/joint14
+        weight: 1
+      - path: pikeman/joint2/joint13/joint14/joint15
+        weight: 1
+      - path: pikeman/polySurface2
+        weight: 1
+      - path: pikeman/polySurface2/polySurface4
+        weight: 1
+      - path: pikeman/polySurface2/polySurface5
+        weight: 1
+      - path: pikeman/spar
+        weight: 1
+      - path: r_foot
+        weight: 1
+      - path: r_foot/polySurface9
+        weight: 1
+      - path: R_hand_control
+        weight: 1
+      - path: R_hand_control/polySurface6
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .00999999978
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 1
+  additionalBone: 0
+  userData: 

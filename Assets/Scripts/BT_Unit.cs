@@ -24,6 +24,8 @@ public class BT_Unit : Entity {
 				return Action.ActionState.ACTION_ABORTED;
 			else if (GetIsWithinAttackingRange(attackTarget))
 				return Action.ActionState.ACTION_DONE;
+			else if (_gameController.CurrentState != GameController.GameState.PLAYING) 
+				return Action.ActionState.ACTION_CANCELLED;
 			else {
 				MoveTo(_fsmUnitRef.transform);
 				return Action.ActionState.ACTION_RUNNING;
@@ -39,6 +41,8 @@ public class BT_Unit : Entity {
 				return Action.ActionState.ACTION_DONE;
 			else if (attackTarget == null)
 				return Action.ActionState.ACTION_ABORTED;
+			else if (_gameController.CurrentState != GameController.GameState.PLAYING) 
+				return Action.ActionState.ACTION_CANCELLED;
 			else {
 				Attack(attackTarget);
 				return Action.ActionState.ACTION_RUNNING;
@@ -52,6 +56,8 @@ public class BT_Unit : Entity {
 		Task fleeTask = this.gameObject.AddComponent<Task>().Initialize(() => {
 			if (attackTarget == null) 
 				return Action.ActionState.ACTION_ABORTED;			
+			else if (_gameController.CurrentState != GameController.GameState.PLAYING) 
+				return Action.ActionState.ACTION_CANCELLED;
 			else if (GetIsWithinPerceptionRange(attackTarget)) {
 				Flee();
 				return Action.ActionState.ACTION_RUNNING;
@@ -89,6 +95,10 @@ public class BT_Unit : Entity {
 						ActionQueue.RemoveAt(0);
 				}*/
 			}
+		}
+		else {
+			StopMoving();
+			StopAllAnimations();
 		}
 	}
 

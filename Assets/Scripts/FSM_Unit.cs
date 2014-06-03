@@ -75,6 +75,10 @@ public class FSM_Unit : Entity {
 					IsDead = true;
 			}
 		}
+		else {
+			StopMoving();
+			StopAllAnimations();
+		}
 	}
 
 	void LateUpdate() {

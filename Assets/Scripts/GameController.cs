@@ -48,6 +48,9 @@ public class GameController : MonoBehaviour {
 
 			if (UnitParent.transform.childCount > 0) {
 				GameObject winner = UnitParent.transform.GetChild(0).gameObject;
+				winner.GetComponent<Entity>().StopMoving();
+				winner.GetComponent<Entity>().StopAllAnimations();
+
 				string winnerName = winner.GetComponent<BT_Unit>() != null ? "BT Unit" : "FSM Unit";
 				string winnerHP = winner.GetComponent<Entity>().CurrentHitPoints.ToString("F0");
 				string winnerHPPercentage = (winner.GetComponent<Entity>().CurrentHitPoints / winner.GetComponent<Entity>().MaxHitPoints).ToString("F1") + "%";
