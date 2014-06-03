@@ -36,7 +36,7 @@ public class Entity : MonoBehaviour {
 	[HideInInspector]
 	public float CurrentHitPoints = 100f;
 	
-	[Range(0, 1000)]
+	[Range(0.01f, 1000f)]
 	public float MovementSpeed = 2f;
 	
 	[Range(0, 100)]
