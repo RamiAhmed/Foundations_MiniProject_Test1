@@ -7,7 +7,6 @@ public class Task : BTObject  {
 	public Action Action { get; set; }
 	public Condition Condition { get; set; }
 
-
 	public Task Initialize(GetAction action, GetCondition condition, float priority) {
 		this.Action = new Action(action);
 		this.Condition = new Condition(condition);

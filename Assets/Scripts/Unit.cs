@@ -14,7 +14,7 @@ public class Unit : MonoBehaviour {
 	void Start () {
 
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 		if (Input.GetKeyDown(KeyCode.Space)) {
@@ -25,7 +25,7 @@ public class Unit : MonoBehaviour {
 				moveTask.Initialize(() => {return ActionMove(index);});
 				taskList.Add(moveTask as BTObject);
 			}
-			
+
 			Sequence moveSequence = this.gameObject.AddComponent<Sequence>();
 			moveSequence.Initialize(taskList);
 			moveSequence.Looping = true;
@@ -34,7 +34,7 @@ public class Unit : MonoBehaviour {
 		}
 		else if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift)) {
 			List<BTObject> countingList = new List<BTObject>();
-			
+
 			for (int i = 0; i < 100; i++) {
 				Task countTask = this.gameObject.AddComponent<Task>();
 				int index = i;
@@ -49,12 +49,12 @@ public class Unit : MonoBehaviour {
 				);
 				countingList.Add(countTask);
 			}
-			
+
 			Selector countSelector = this.gameObject.AddComponent<Selector>();
 			countSelector.Initialize(countingList);
 			countSelector.Looping = true;
 			countSelector.Counter = 3;
-			
+
 			ActionQueue.Add(countSelector);
 		}
 		else if (Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return)) {
@@ -145,7 +145,7 @@ public class Unit : MonoBehaviour {
 		if (Vector3.Distance(target, this.transform.position) <= movementSpeed/2f) {
 			return Action.ActionState.ACTION_DONE;
 		}
-		else 
+		else
 			return Action.ActionState.ACTION_RUNNING;
 	}
 
