@@ -46,10 +46,8 @@ public class GameController : MonoBehaviour {
 			if (!GUI.skin.box.wordWrap)
 				GUI.skin.box.wordWrap = true;
 
-			if (UnitParent.transform.childCount > 0) {
+			if (UnitParent.transform.childCount == 1) {
 				GameObject winner = UnitParent.transform.GetChild(0).gameObject;
-				winner.GetComponent<Entity>().StopMoving();
-				winner.GetComponent<Entity>().StopAllAnimations();
 
 				string winnerName = winner.GetComponent<BT_Unit>() != null ? "BT Unit" : "FSM Unit";
 				string winnerHP = winner.GetComponent<Entity>().CurrentHitPoints.ToString("F0");
@@ -69,7 +67,10 @@ public class GameController : MonoBehaviour {
 
 		if (CurrentState != GameState.PLAYING) {
 			if (GUILayout.Button("Play")) {
-				CurrentState = GameState.PLAYING;
+				if (CurrentState == GameState.ENDING)
+					Application.LoadLevel(Application.loadedLevelName);
+				else
+					CurrentState = GameState.PLAYING;
 			}
 		}
 		else {
@@ -90,7 +91,7 @@ public class GameController : MonoBehaviour {
 		GUILayout.EndArea();
 
 		float width = 120f,
-		     height = 30f;
+		     height = 25f;
 		GUI.Box(new Rect(Screen.width-(width+5f), Screen.height-(height+5f), width, height), "State: " + CurrentState.ToString());
 
 		GUI.Box(new Rect(5f, 50f, width, height), "Time: " + GameTime.ToString("F1"));
