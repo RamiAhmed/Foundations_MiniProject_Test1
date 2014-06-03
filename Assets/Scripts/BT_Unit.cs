@@ -16,11 +16,13 @@ public class BT_Unit : Entity {
 		if (_fsmUnitRef == null)
 			Debug.LogError("Could not find FSM Unit");
 
+		this.attackTarget = _fsmUnitRef as Entity;
+
 
 		Task moveTask = this.gameObject.AddComponent<Task>().Initialize(() => {
-			if (_fsmUnitRef == null) 
+			if (attackTarget == null) 
 				return Action.ActionState.ACTION_ABORTED;
-			else if (GetIsWithinAttackingRange(_fsmUnitRef as Entity))
+			else if (GetIsWithinAttackingRange(attackTarget))
 				return Action.ActionState.ACTION_DONE;
 			else {
 				MoveTo(_fsmUnitRef.transform);
@@ -28,29 +30,29 @@ public class BT_Unit : Entity {
 			}
 		},
 		() => {
-			return GetIsWithinPerceptionRange(_fsmUnitRef as Entity) && !GetIsWithinAttackingRange(_fsmUnitRef as Entity);
+			return GetIsWithinPerceptionRange(attackTarget) && !GetIsWithinAttackingRange(attackTarget);
 		}, 0.1f, "Move Task");
 
 
 		Task attackTask = this.gameObject.AddComponent<Task>().Initialize(() => {
-			if (_fsmUnitRef.IsDead)
+			if (attackTarget.IsDead)
 				return Action.ActionState.ACTION_DONE;
-			else if (_fsmUnitRef == null)
+			else if (attackTarget == null)
 				return Action.ActionState.ACTION_ABORTED;
 			else {
-				Attack(_fsmUnitRef as Entity);
+				Attack(attackTarget);
 				return Action.ActionState.ACTION_RUNNING;
 			}
 		},
 		() => {
-			return GetIsWithinAttackingRange(_fsmUnitRef as Entity);
+			return GetIsWithinAttackingRange(attackTarget) && !this.GetShouldFlee();
 		}, 0.7f, "Attack Task");
 
 
-		/*Task fleeTask = this.gameObject.AddComponent<Task>().Initialize(() => {
-			if (_fsmUnitRef == null) 
+		Task fleeTask = this.gameObject.AddComponent<Task>().Initialize(() => {
+			if (attackTarget == null) 
 				return Action.ActionState.ACTION_ABORTED;			
-			else if (GetIsWithinPerceptionRange(_fsmUnitRef as Entity)) {
+			else if (GetIsWithinPerceptionRange(attackTarget)) {
 				Flee();
 				return Action.ActionState.ACTION_RUNNING;
 			}
@@ -58,13 +60,14 @@ public class BT_Unit : Entity {
 				return Action.ActionState.ACTION_DONE;
 		},
 		() => {
-			return GetIsWithinPerceptionRange(_fsmUnitRef as Entity) && this.GetShouldFlee();
-		}, 1f, "Flee Task");*/
+			return GetIsWithinPerceptionRange(attackTarget) && this.GetShouldFlee();
+		}, 1f, "Flee Task");
 
 		List<BTObject> taskList = new List<BTObject>();
-		taskList.Add(moveTask);
+		taskList.Add(fleeTask);
 		taskList.Add(attackTask);
-		//taskList.Add(fleeTask);
+		taskList.Add(moveTask);
+
 
 		Selector topSelector = this.gameObject.AddComponent<Selector>();
 		topSelector.Initialize(taskList, "BT Unit Selector", true);

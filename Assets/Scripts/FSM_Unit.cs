@@ -6,7 +6,7 @@ public class FSM_Unit : Entity {
 	private enum UnitState {
 		WAITING,
 		ATTACKING,
-//		FLEEING,
+		FLEEING,
 		DEAD
 	};
 
@@ -39,27 +39,27 @@ public class FSM_Unit : Entity {
 
 			}
 			else if (currentState == UnitState.ATTACKING) {
-				if (_btUnitRef != null && !_btUnitRef.IsDead) {
-					/*if (GetShouldFlee()) {
+				if (attackTarget != null && !attackTarget.IsDead) {
+					if (GetShouldFlee()) {
 						this.currentState = UnitState.FLEEING;
 					}
-					else*/ if (GetIsWithinAttackingRange(_btUnitRef as Entity)) {
-						Attack(_btUnitRef as Entity);
+					else if (GetIsWithinAttackingRange(attackTarget)) {
+						Attack(attackTarget);
 					}
-					else if (GetIsWithinPerceptionRange(_btUnitRef as Entity)) {
-						this.MoveTo(_btUnitRef.transform);
+					else if (GetIsWithinPerceptionRange(attackTarget)) {
+						this.MoveTo(attackTarget.transform);
 					}
 					else {
-						Debug.LogWarning(_btUnitRef.Name + " is not in range for " + this.Name);
+						Debug.LogWarning(attackTarget.Name + " is not in range for " + this.Name);
 					}
 				}
 				else {
 					this.currentState = UnitState.WAITING;
 				}
 			}
-			/*else if (currentState == UnitState.FLEEING) {
-				if (_btUnitRef != null && !_btUnitRef.IsDead) {
-					if (GetIsWithinPerceptionRange(_btUnitRef as Entity)) {
+			else if (currentState == UnitState.FLEEING) {
+				if (attackTarget != null && !attackTarget.IsDead) {
+					if (GetShouldFlee() && GetIsWithinPerceptionRange(attackTarget)) {
 						Flee();
 					}
 					else {
@@ -69,7 +69,7 @@ public class FSM_Unit : Entity {
 				else {
 					this.currentState = UnitState.WAITING;
 				}
-			}*/
+			}
 			else if (currentState == UnitState.DEAD) {
 				if (!IsDead)
 					IsDead = true;

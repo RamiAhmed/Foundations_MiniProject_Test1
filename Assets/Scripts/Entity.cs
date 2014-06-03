@@ -51,7 +51,7 @@ public class Entity : MonoBehaviour {
 	[Range(0f, 1f)]
 	public float FleeThreshold = 0.1f;
 	
-	[Range(0f, 1f)]
+	[Range(0f, 100f)]
 	public float MoralePointsPerSecond = 0.01f; 
 	
 	public string WalkAnimation = "", 
@@ -87,6 +87,7 @@ public class Entity : MonoBehaviour {
 	private Dictionary<string, AudioSource> audioSources;
 	private bool isMoving = false;	
 	private float lastMoraleRegenerate = 0f;
+	private float maxMoraleLevel = 0f;
 
 	#endregion
 
@@ -96,7 +97,7 @@ public class Entity : MonoBehaviour {
 		if (_gameController.CurrentState == GameController.GameState.PLAYING || _gameController.CurrentState == GameController.GameState.PAUSED) {
 			if (HealthbarTexture != null) {
 				if (!this.IsDead) {
-					float width = 100f, height = 25f;
+					float width = 75f, height = 25f;
 					
 					Vector3 healthBarPos = _camRef.WorldToScreenPoint(new Vector3(0f, 1.5f, 0f) + this.transform.position);
 					float barWidth = width * (this.CurrentHitPoints / this.MaxHitPoints);
@@ -141,6 +142,7 @@ public class Entity : MonoBehaviour {
 			Debug.LogWarning("Could not identify camera.");
 
 		this.CurrentHitPoints = this.MaxHitPoints;
+		this.maxMoraleLevel = this.MaxHitPoints;
 	}
 
 	#region VIRTUAL_METHODS 
@@ -162,7 +164,9 @@ public class Entity : MonoBehaviour {
 			if (this.moraleLevel < 100f) {
 				if (_gameController.GameTime - this.lastMoraleRegenerate > 1f) {
 					this.lastMoraleRegenerate = _gameController.GameTime;
-					this.moraleLevel += this.MoralePointsPerSecond;
+
+					if (this.moraleLevel + this.MoralePointsPerSecond <= this.maxMoraleLevel)
+						this.moraleLevel += this.MoralePointsPerSecond;
 				}
 			}
 		}
@@ -190,9 +194,9 @@ public class Entity : MonoBehaviour {
 		return target != null && Vector3.Distance(target.transform.position, this.transform.position) < range;
 	}
 
-	public float GetDamage(bool bAverage) {
+	/*public float GetDamage(bool bAverage) {
 		return bAverage ? (MaximumDamage - MinimumDamage)/2f + MinimumDamage : GetDamage();
-	}
+	}*/
 	
 	public float GetDamage() {
 		return Random.Range(MinimumDamage, MaximumDamage);
@@ -220,7 +224,7 @@ public class Entity : MonoBehaviour {
 	public void Flee() {
 		if (this.attackTarget != null && !this.attackTarget.IsDead) {
 			Vector3 direction = (-(this.attackTarget.transform.position - this.transform.position)).normalized;
-			Vector3 speed = direction * Time.deltaTime * MovementSpeed;
+			Vector3 speed = direction * Time.deltaTime * MovementSpeed * 2f;
 			
 			//this.transform.Translate(speed);
 			this.transform.position = speed + this.transform.position;
@@ -237,9 +241,10 @@ public class Entity : MonoBehaviour {
 			return;
 		}
 		
-		this.moraleLevel -= (this.GetD20()/20f) < FleeThreshold ? damage : 0f;
-		if (this.moraleLevel < 0f) {
-			this.moraleLevel = 0f;
+		//float moraleDamage = (this.GetD20()/20f) < FleeThreshold ? damage : 0f;
+		float moraleDamage = damage;
+		if (this.moraleLevel - moraleDamage >= 0f) {
+			this.moraleLevel -= moraleDamage;
 		}
 		
 		this.CurrentHitPoints -= damage;
@@ -250,7 +255,7 @@ public class Entity : MonoBehaviour {
 	}
 
 	public bool GetShouldFlee() {
-		return this.moraleLevel / 100f < FleeThreshold;
+		return this.moraleLevel / this.maxMoraleLevel < FleeThreshold;
 	}
 
 	public void StopAllAnimations() {
