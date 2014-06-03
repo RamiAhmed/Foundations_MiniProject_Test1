@@ -28,7 +28,8 @@ public class Sequence : BTObject {
 	}
 
 	public Sequence Initialize(List<BTObject> taskSequence) {
-		this.TaskSequence = taskSequence.OrderByDescending( x => x.Priority ).ToList();
+		this.TaskSequence = taskSequence;
+		this.TaskSequence = TaskSequence.OrderByDescending( x => x.Priority ).ToList();
 
 		this.currentTask = this.TaskSequence[0];
 

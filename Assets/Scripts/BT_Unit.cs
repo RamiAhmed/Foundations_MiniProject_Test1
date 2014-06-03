@@ -17,7 +17,8 @@ public class BT_Unit : Entity {
 			Debug.LogError("Could not find FSM Unit");
 
 
-		Task findTargetTask = this.gameObject.AddComponent<Task>().Initialize(() => {
+		Task findTargetTask = this.gameObject.AddComponent<Task>().Initialize(
+		() => {
 			this.attackTarget = _fsmUnitRef as Entity;
 			if (attackTarget != null) {
 				//Debug.Log(this.Name + " found target: " + attackTarget.Name);
@@ -27,11 +28,12 @@ public class BT_Unit : Entity {
 				return Action.ActionState.ACTION_ABORTED;
 		},
 		() => {
-			return this.attackTarget == null || this.attackTarget.gameObject != _fsmUnitRef.gameObject;
+			return this.attackTarget == null;
 		}, 1f, "Find Target Task");
 
 
-		Task moveTask = this.gameObject.AddComponent<Task>().Initialize(() => {
+		Task moveTask = this.gameObject.AddComponent<Task>().Initialize(
+		() => {
 			if (attackTarget == null) 
 				return Action.ActionState.ACTION_ABORTED;
 			else if (GetIsWithinAttackingRange(attackTarget))
@@ -45,10 +47,11 @@ public class BT_Unit : Entity {
 		},
 		() => {
 			return GetIsWithinPerceptionRange(attackTarget) && !GetIsWithinAttackingRange(attackTarget);
-		}, 1f, "Move Task");
+		}, 0.8f, "Move Task");
 
 
-		Task attackTask = this.gameObject.AddComponent<Task>().Initialize(() => {
+		Task attackTask = this.gameObject.AddComponent<Task>().Initialize(
+		() => {
 			if (attackTarget == null)
 				return Action.ActionState.ACTION_ABORTED;
 			else if (attackTarget.IsDead)
@@ -62,10 +65,11 @@ public class BT_Unit : Entity {
 		},
 		() => {
 			return GetIsWithinAttackingRange(attackTarget) && !this.GetShouldFlee();
-		}, 1f, "Attack Task");
+		}, 0.5f, "Attack Task");
 
 
-		Task fleeTask = this.gameObject.AddComponent<Task>().Initialize(() => {
+		Task fleeTask = this.gameObject.AddComponent<Task>().Initialize(
+		() => {
 			if (attackTarget == null) 
 				return Action.ActionState.ACTION_ABORTED;			
 			else if (_gameController.CurrentState != GameController.GameState.PLAYING) 
@@ -79,7 +83,7 @@ public class BT_Unit : Entity {
 		},
 		() => {
 			return GetIsWithinPerceptionRange(attackTarget) && this.GetShouldFlee();
-		}, 1f, "Flee Task");
+		}, 0.7f, "Flee Task");
 
 
 		Selector topSelector = this.gameObject.AddComponent<Selector>();

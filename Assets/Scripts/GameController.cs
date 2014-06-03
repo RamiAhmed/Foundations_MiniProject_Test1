@@ -59,7 +59,7 @@ public class GameController : MonoBehaviour {
 				GUI.Box(new Rect((Screen.width/2f) - (endWidth/2f), (Screen.height/2f) - (endHeight/2f), endWidth, endHeight), endString);
 			}
 			else {
-				string endString = "The game has ended.\nThere was no winner, as both died.";
+				string endString = "The game has ended.\nThere was no winner, as both units died.";
 				GUI.Box(new Rect((Screen.width/2f) - (endWidth/2f), (Screen.height/2f) - (endHeight/2f), endWidth, endHeight), endString);
 			}
 		}

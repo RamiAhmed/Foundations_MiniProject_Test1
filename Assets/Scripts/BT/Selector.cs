@@ -28,7 +28,8 @@ public class Selector : BTObject {
 	}
 
 	public Selector Initialize(List<BTObject> taskSelectors) {
-		this.TaskSelectors = taskSelectors.OrderByDescending( x => x.Priority ).ToList();
+		this.TaskSelectors = taskSelectors;
+		this.TaskSelectors = TaskSelectors.OrderByDescending( x => x.Priority ).ToList();
 
 		this.currentTask = this.TaskSelectors[0];
 
