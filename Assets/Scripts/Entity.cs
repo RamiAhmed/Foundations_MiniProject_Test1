@@ -281,7 +281,6 @@ public class Entity : MonoBehaviour {
 	public void StopAllAnimations() {
 		if (animation != null) {
 			animation.Stop();
-			// TODO Find nicer solution
 		}
 	}
 
@@ -300,22 +299,13 @@ public class Entity : MonoBehaviour {
 		if (opponent.IsDead || opponent == null) {
 			attackTarget = null;
 		}
-		/*else if (GetIsAlly(opponent)) {
-			attackTarget = null;
-			Debug.LogWarning(this.Name + " tried to attack ally " + opponent);
-		}*/
 		else {
 			StopMoving();
-			//lookAtTarget(opponent.transform.position);
 			this.transform.LookAt(opponent.transform.position);
 			
 			float currentTime = Time.time;
 			if (currentTime - lastAttack > 1f/AttacksPerSecond) {
 				lastAttack = currentTime;
-				
-				/*if (Bullet != null) {
-					ShootBullet(opponent);
-				}*/
 				
 				float accuracy = this.Accuracy + Random.value;
 				accuracy = accuracy > 1f ? 1f : accuracy;
@@ -334,9 +324,6 @@ public class Entity : MonoBehaviour {
 				else {
 					Debug.Log(_gameController.GameTime + ": " + this.Name + " missed " + opponent.Name);
 				}
-				
-				//this.attackCount++;
-				//opponent.attackedCount++;
 				
 				if (opponent.lastAttacker == null) {
 					opponent.lastAttacker = this;
