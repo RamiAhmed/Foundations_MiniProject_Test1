@@ -16,7 +16,19 @@ public class BT_Unit : Entity {
 		if (_fsmUnitRef == null)
 			Debug.LogError("Could not find FSM Unit");
 
-		this.attackTarget = _fsmUnitRef as Entity;
+
+		Task findTargetTask = this.gameObject.AddComponent<Task>().Initialize(() => {
+			this.attackTarget = _fsmUnitRef as Entity;
+			if (attackTarget != null) {
+				//Debug.Log(this.Name + " found target: " + attackTarget.Name);
+				return Action.ActionState.ACTION_DONE;
+			}
+			else
+				return Action.ActionState.ACTION_ABORTED;
+		},
+		() => {
+			return this.attackTarget == null || this.attackTarget.gameObject != _fsmUnitRef.gameObject;
+		}, 1f, "Find Target Task");
 
 
 		Task moveTask = this.gameObject.AddComponent<Task>().Initialize(() => {
@@ -33,14 +45,14 @@ public class BT_Unit : Entity {
 		},
 		() => {
 			return GetIsWithinPerceptionRange(attackTarget) && !GetIsWithinAttackingRange(attackTarget);
-		}, 0.1f, "Move Task");
+		}, 1f, "Move Task");
 
 
 		Task attackTask = this.gameObject.AddComponent<Task>().Initialize(() => {
-			if (attackTarget.IsDead)
-				return Action.ActionState.ACTION_DONE;
-			else if (attackTarget == null)
+			if (attackTarget == null)
 				return Action.ActionState.ACTION_ABORTED;
+			else if (attackTarget.IsDead)
+				return Action.ActionState.ACTION_DONE;
 			else if (_gameController.CurrentState != GameController.GameState.PLAYING) 
 				return Action.ActionState.ACTION_CANCELLED;
 			else {
@@ -50,7 +62,7 @@ public class BT_Unit : Entity {
 		},
 		() => {
 			return GetIsWithinAttackingRange(attackTarget) && !this.GetShouldFlee();
-		}, 0.7f, "Attack Task");
+		}, 1f, "Attack Task");
 
 
 		Task fleeTask = this.gameObject.AddComponent<Task>().Initialize(() => {
@@ -69,14 +81,11 @@ public class BT_Unit : Entity {
 			return GetIsWithinPerceptionRange(attackTarget) && this.GetShouldFlee();
 		}, 1f, "Flee Task");
 
-		List<BTObject> taskList = new List<BTObject>();
-		taskList.Add(fleeTask);
-		taskList.Add(attackTask);
-		taskList.Add(moveTask);
-
 
 		Selector topSelector = this.gameObject.AddComponent<Selector>();
-		topSelector.Initialize(taskList, "BT Unit Selector", true);
+		topSelector.Initialize(new BTObject[]{ fleeTask, attackTask, moveTask, findTargetTask });
+		topSelector.BTName = "BT Unit Selector";
+		topSelector.Looping = true;
 
 		ActionQueue.Add(topSelector);
 	}
