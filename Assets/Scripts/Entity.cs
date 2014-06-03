@@ -246,6 +246,8 @@ public class Entity : MonoBehaviour {
 			Vector3 speed = direction * Time.deltaTime * MovementSpeed * 2f;
 
 			this.transform.position = speed + this.transform.position;
+
+			direction.y = this.renderer.bounds.extents.y;
 			this.transform.LookAt(direction);
 			
 			if (!isMoving)
