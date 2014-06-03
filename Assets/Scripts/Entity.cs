@@ -82,7 +82,7 @@ public class Entity : MonoBehaviour {
 	
 	protected float lastAttack = 0f;
 	protected float meleeDistance = 5f;
-	protected float moraleLevel = 100f;
+	protected float moraleLevel = 0f;
 	protected GameController _gameController;
 	protected Camera _camRef = null;
 
@@ -104,7 +104,7 @@ public class Entity : MonoBehaviour {
 				if (!this.IsDead) {
 					float width = 75f, height = 25f;
 					
-					Vector3 healthBarPos = _camRef.WorldToScreenPoint(new Vector3(0f, 1.4f, 0f) + this.transform.position);
+					Vector3 healthBarPos = _camRef.WorldToScreenPoint(new Vector3(0f, 3.4f, 0f) + this.transform.position);
 					float barWidth = width * (this.CurrentHitPoints / this.MaxHitPoints);
 					
 					GUI.BeginGroup(new Rect(healthBarPos.x - (width/2f), Screen.height - healthBarPos.y - (height/2f), barWidth, height));
@@ -120,7 +120,7 @@ public class Entity : MonoBehaviour {
 				if (!this.IsDead) {
 					float width = 75f, height = 25f;
 					
-					Vector3 moraleBarPos = _camRef.WorldToScreenPoint(new Vector3(0f, 2.25f, 0f) + this.transform.position);
+					Vector3 moraleBarPos = _camRef.WorldToScreenPoint(new Vector3(0f, 4.25f, 0f) + this.transform.position);
 					float barWidth = width * (this.moraleLevel / this.maxMoraleLevel);
 					
 					GUI.BeginGroup(new Rect(moraleBarPos.x - (width/2f), Screen.height - moraleBarPos.y - (height/2f), barWidth, height));
@@ -130,12 +130,10 @@ public class Entity : MonoBehaviour {
 			}
 
 			float nameWidth = 75f, nameHeight = 25f;
-			Vector3 textPos = _camRef.WorldToScreenPoint(new Vector3(0f, 3f, 0f) + this.transform.position);
+			Vector3 textPos = _camRef.WorldToScreenPoint(new Vector3(0f, 5f, 0f) + this.transform.position);
 			GUI.Label(new Rect(textPos.x - (nameWidth/2f), Screen.height - textPos.y - (nameHeight/2f), nameWidth, nameHeight), this.Name);
 		}
 	}
-
-	#endregion
 
 	void Awake() {
 		_gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
@@ -163,6 +161,8 @@ public class Entity : MonoBehaviour {
 		this.maxMoraleLevel = this.MaxHitPoints;
 		this.moraleLevel = this.maxMoraleLevel;
 	}
+
+	#endregion
 
 	#region VIRTUAL_METHODS 
 
@@ -232,7 +232,6 @@ public class Entity : MonoBehaviour {
 			Vector3 direction = (position - this.transform.position).normalized;
 			Vector3 speed = direction * Time.deltaTime * MovementSpeed;
 
-			//this.transform.Translate(speed);
 			this.transform.position = speed + this.transform.position;
 			this.transform.LookAt(position);
 
@@ -243,10 +242,9 @@ public class Entity : MonoBehaviour {
 
 	public void Flee() {
 		if (this.attackTarget != null && !this.attackTarget.IsDead) {
-			Vector3 direction = (-(this.attackTarget.transform.position - this.transform.position)).normalized;
+			Vector3 direction = (-(this.attackTarget.transform.position - this.transform.position) + (-this.transform.right*2f)).normalized;
 			Vector3 speed = direction * Time.deltaTime * MovementSpeed * 2f;
-			
-			//this.transform.Translate(speed);
+
 			this.transform.position = speed + this.transform.position;
 			this.transform.LookAt(direction);
 			
