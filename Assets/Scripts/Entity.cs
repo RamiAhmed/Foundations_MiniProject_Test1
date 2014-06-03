@@ -247,8 +247,8 @@ public class Entity : MonoBehaviour {
 
 			this.transform.position = speed + this.transform.position;
 
-			direction.y = this.renderer.bounds.extents.y;
-			this.transform.LookAt(direction);
+			//direction.y = this.renderer.bounds.extents.y;
+			//this.transform.LookAt(direction);
 			
 			if (!isMoving)
 				isMoving = true;
@@ -262,7 +262,7 @@ public class Entity : MonoBehaviour {
 		}
 		
 		//float moraleDamage = (this.GetD20()/20f) < FleeThreshold ? damage : 0f;
-		float moraleDamage = damage;
+		float moraleDamage = damage + (damage * FleeThreshold);
 		if (this.moraleLevel - moraleDamage >= 0f) {
 			this.moraleLevel -= moraleDamage;
 		}
