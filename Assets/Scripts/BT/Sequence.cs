@@ -28,6 +28,9 @@ public class Sequence : BTObject {
 	}
 
 	public Sequence Initialize(List<BTObject> taskSequence) {
+		if (taskSequence == null)
+			throw new System.ArgumentNullException("taskSequence", "Cannot supply null taskSequence to Sequence class");
+
 		this.TaskSequence = taskSequence;
 		this.TaskSequence = TaskSequence.OrderByDescending( x => x.Priority ).ToList();
 

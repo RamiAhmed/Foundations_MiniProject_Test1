@@ -28,6 +28,9 @@ public class Selector : BTObject {
 	}
 
 	public Selector Initialize(List<BTObject> taskSelectors) {
+		if (taskSelectors == null)
+			throw new System.ArgumentNullException("taskSelectors", "Cannot supply taskSelectors as null to Selector Initialize");
+
 		this.TaskSelectors = taskSelectors;
 		this.TaskSelectors = TaskSelectors.OrderByDescending( x => x.Priority ).ToList();
 

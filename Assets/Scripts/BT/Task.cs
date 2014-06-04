@@ -152,8 +152,9 @@ public class Task : BTObject  {
 						this.bDoneRunning = true;
 					}
 				}
-				else 
+				else {
 					this.bDoneRunning = true;
+				}
 			}
 		}
 	}
