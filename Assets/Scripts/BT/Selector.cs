@@ -38,9 +38,6 @@ public class Selector : BTObject {
 
 	public Selector Initialize(params BTObject[] taskObjects) {
 		List<BTObject> newList = new List<BTObject>();
-		/*foreach (BTObject obj in taskObjects) {
-			newList.Add(obj);
-		}*/
 		newList.AddRange(taskObjects);
 		
 		return Initialize(newList);
