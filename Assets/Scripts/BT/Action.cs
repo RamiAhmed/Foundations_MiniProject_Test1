@@ -13,7 +13,7 @@ public class Action  {
 		ACTION_DONE,
 		ACTION_CANCELLED,
 		ACTION_ABORTED
-	}
+	};
 
 	public ActionState CurrentState = ActionState.ACTION_WAITING;
 
