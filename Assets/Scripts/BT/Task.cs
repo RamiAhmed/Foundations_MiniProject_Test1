@@ -7,64 +7,65 @@ public class Task : BTObject  {
 	public Action Action { get; set; }
 	public Condition Condition { get; set; }
 
+
 	public Task Initialize(ActionFunction action, ConditionFunction condition, float priority, string name, bool bLooping, int counter) {
+		if (action == null)
+			throw new System.ArgumentNullException("action", "ActionFunction supplied to Task cannot be null");
+		if (condition == null)
+			throw new System.ArgumentNullException("condition", "ConditionFunction supplied to Task cannot be null; use an overload without the Condition parameter");
+
 		this.Action = new Action(action);
 		this.Condition = new Condition(condition);
 		this.Priority = priority;
-		this.BTName = name;
+
+		if (!string.IsNullOrEmpty(name))
+			this.BTName = name;
+
+		this.Looping = bLooping;
+		this.Counter = counter;
+
+		return this;
+	}
+
+	public Task Initialize(ActionFunction action, ConditionFunction condition, float priority, string name) {
+		return Initialize(action, condition, priority, name, false, 0);
+	}
+
+	public Task Initialize(ActionFunction action, ConditionFunction condition, float priority) {
+		return Initialize(action, condition, priority, "");
+	}
+
+	public Task Initialize(ActionFunction action, ConditionFunction condition) {
+		return Initialize(action, condition, 0.5f);
+	}
+
+	public Task Initialize(ActionFunction action, float priority, string name, bool bLooping, int counter) {
+		if (action == null)
+			throw new System.ArgumentNullException("action", "ActionFunction supplied to Task cannot be null");
+		
+		this.Action = new Action(action);
+		this.Condition = null;
+		this.Priority = priority;
+
+		if (!string.IsNullOrEmpty(name))
+			this.BTName = name;
+
 		this.Looping = bLooping;
 		this.Counter = counter;
 		
 		return this;
 	}
 
-	public Task Initialize(ActionFunction action, ConditionFunction condition, float priority, string name, bool bLooping) {
-		this.Action = new Action(action);
-		this.Condition = new Condition(condition);
-		this.Priority = priority;
-		this.BTName = name;
-		this.Looping = bLooping;
-		
-		return this;
-	}
-
-	public Task Initialize(ActionFunction action, ConditionFunction condition, float priority, string name) {
-		this.Action = new Action(action);
-		this.Condition = new Condition(condition);
-		this.Priority = priority;
-		this.BTName = name;
-
-		return this;
-	}
-
-	public Task Initialize(ActionFunction action, ConditionFunction condition, float priority) {
-		this.Action = new Action(action);
-		this.Condition = new Condition(condition);
-		this.Priority = priority;
-
-		return this;
-	}
-
-	public Task Initialize(ActionFunction action, ConditionFunction condition) {
-		this.Action = new Action(action);
-		this.Condition = new Condition(condition);
-
-		return this;
+	public Task Initialize(ActionFunction action, float priority, string name) {
+		return Initialize(action, priority, name, false, 0);
 	}
 
 	public Task Initialize(ActionFunction action, float priority) {
-		this.Action = new Action(action);
-		this.Condition = null;
-		this.Priority = priority;
-
-		return this;
+		return Initialize(action, priority, "");
 	}
 
 	public Task Initialize(ActionFunction action) {
-		this.Action = new Action(action);
-		this.Condition = null;
-
-		return this;
+		return Initialize(action, 0.5f);
 	}
 
 
