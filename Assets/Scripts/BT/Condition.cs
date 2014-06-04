@@ -4,27 +4,22 @@ using System.Collections;
 public delegate bool ConditionFunction();
 
 public class Condition {
-	
-	public event ConditionFunction OnCondition;
+
+	private ConditionFunction CachedFunc;
 
 	public bool Result { get; set; }
 
 
 	public Condition(ConditionFunction condition) {
-		this.AddCondition(condition);
-	}
+		if (condition == null)
+			throw new System.ArgumentNullException("condition", "ConditionFunction in Condition cannot be null");
 
-	public void AddCondition(ConditionFunction condition) {
-		this.OnCondition += condition;
-	}
-
-	public void RemoveCondition(ConditionFunction condition) {
-		this.OnCondition -= condition;
+		this.CachedFunc = condition;
 	}
 
 	public bool GetIsConditionTrue() {
-		if (this.OnCondition != null) {
-			this.Result = this.OnCondition();
+		if (this.CachedFunc != null) {
+			this.Result = this.CachedFunc();
 		}
 
 		return this.Result;

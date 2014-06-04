@@ -5,7 +5,7 @@ public delegate Action.ActionState ActionFunction();
 
 public class Action  {
 
-	public event ActionFunction OnAction;
+	private ActionFunction CachedFunc;
 
 	public enum ActionState {
 		ACTION_WAITING,
@@ -19,19 +19,15 @@ public class Action  {
 
 
 	public Action(ActionFunction action) {
-		this.AddAction(action);
-	}
+		if (action == null)
+			throw new System.ArgumentNullException("action", "ActionFunction supplied to Action cannot be null");
 
-	public void AddAction(ActionFunction action) {
-		this.OnAction += action;
-	}
-	public void RemoveAction(ActionFunction action) {
-		this.OnAction -= action;
+		this.CachedFunc = action;
 	}
 
 	public ActionState RunAction() {
-		if (this.OnAction != null) {
-			this.CurrentState = this.OnAction();
+		if (this.CachedFunc != null) {
+			this.CurrentState = this.CachedFunc();
 		}
 		else {
 			Debug.LogWarning("Action has no OnAction set");
