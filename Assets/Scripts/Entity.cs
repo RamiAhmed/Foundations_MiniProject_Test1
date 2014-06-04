@@ -65,12 +65,11 @@ public class Entity : MonoBehaviour {
 		DeathSounds = new List<AudioClip>(), 
 		BeingHitSounds = new List<AudioClip>();
 
-	public Texture2D HealthbarTexture = null;
-	public Texture2D MoraleBarTexture = null;
+	public Texture2D HealthbarTexture = null,
+					 MoraleBarTexture = null;
 	
 	[HideInInspector]
-	public bool Selected = false,
-				IsDead = false;
+	public bool IsDead = false;
 	
 	[HideInInspector]
 	public Entity lastAttacker = null,
@@ -86,8 +85,8 @@ public class Entity : MonoBehaviour {
 	protected GameController _gameController;
 	protected Camera _camRef = null;
 
-	//private Vector3 targetPosition = Vector3.zero;
-	private Animation animation;	
+
+	private Animation animationRef;	
 	private Dictionary<string, AudioSource> audioSources;
 	private bool isMoving = false;	
 	private float lastMoraleRegenerate = 0f;
@@ -137,12 +136,7 @@ public class Entity : MonoBehaviour {
 
 	void Awake() {
 		_gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
-
-		animation = this.GetComponent<Animation>();
-		if (animation == null) {
-			animation = this.GetComponentInChildren<Animation>();
-		}
-		
+				
 		audioSources = new Dictionary<string, AudioSource>();
 
 		if (AttackSounds.Count > 0)
@@ -167,14 +161,24 @@ public class Entity : MonoBehaviour {
 	#region VIRTUAL_METHODS 
 
 	// Use Start for initialization
-	protected virtual void Start() {}
+	protected virtual void Start() {
+		animationRef = this.animation;
+		if (animationRef == null)
+			animationRef = this.GetComponent<Animation>();
+		if (animationRef == null) 
+			animationRef = this.GetComponentInChildren<Animation>();
+		if (animationRef == null) {
+			Debug.LogWarning("Could not find animation component on " + this.Name);
+		}
+
+	}
 	
 	// Update is called once per frame
 	protected virtual void Update() {
-		if (animation != null) {
+		if (animationRef != null) {
 			if (isMoving) {
-				if (!animation.IsPlaying(GetWalkAnimation())) {
-					animation.Play(GetWalkAnimation());
+				if (!animationRef.IsPlaying(GetWalkAnimation())) {
+					animationRef.Play(GetWalkAnimation());
 				}
 			}
 		}
@@ -185,6 +189,10 @@ public class Entity : MonoBehaviour {
 
 				if (this.moraleLevel + this.MoralePointsPerSecond <= this.maxMoraleLevel)
 					this.moraleLevel += this.MoralePointsPerSecond;
+			}
+
+			if (_gameController.GameTime - this.lastHPRegenerate > 1f) {
+				this.lastHPRegenerate = _gameController.GameTime;
 
 				if (this.CurrentHitPoints + this.HitPointsPerSecond <= this.MaxHitPoints) 
 					this.CurrentHitPoints += this.HitPointsPerSecond;
@@ -279,8 +287,8 @@ public class Entity : MonoBehaviour {
 	}
 
 	public void StopAllAnimations() {
-		if (animation != null) {
-			animation.Stop();
+		if (animationRef != null) {
+			animationRef.Stop();
 		}
 	}
 
@@ -332,8 +340,8 @@ public class Entity : MonoBehaviour {
 				if (this.attackTarget != opponent) 
 					this.attackTarget = opponent;
 				
-				if (animation != null) {
-					animation.Play(GetAttackAnimation());
+				if (animationRef != null) {
+					animationRef.Play(GetAttackAnimation());
 				}		
 				
 				PlayRandomAttackSound();

@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public delegate Action.ActionState GetAction();
+public delegate Action.ActionState ActionFunction();
 
 public class Action  {
 
-	public event GetAction OnAction;
+	public event ActionFunction OnAction;
 
 	public enum ActionState {
 		ACTION_WAITING,
@@ -18,14 +18,14 @@ public class Action  {
 	public ActionState CurrentState = ActionState.ACTION_WAITING;
 
 
-	public Action(GetAction action) {
+	public Action(ActionFunction action) {
 		this.AddAction(action);
 	}
 
-	public void AddAction(GetAction action) {
+	public void AddAction(ActionFunction action) {
 		this.OnAction += action;
 	}
-	public void RemoveAction(GetAction action) {
+	public void RemoveAction(ActionFunction action) {
 		this.OnAction -= action;
 	}
 

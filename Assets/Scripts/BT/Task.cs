@@ -7,7 +7,7 @@ public class Task : BTObject  {
 	public Action Action { get; set; }
 	public Condition Condition { get; set; }
 
-	public Task Initialize(GetAction action, GetCondition condition, float priority, string name, bool bLooping, int counter) {
+	public Task Initialize(ActionFunction action, ConditionFunction condition, float priority, string name, bool bLooping, int counter) {
 		this.Action = new Action(action);
 		this.Condition = new Condition(condition);
 		this.Priority = priority;
@@ -18,7 +18,7 @@ public class Task : BTObject  {
 		return this;
 	}
 
-	public Task Initialize(GetAction action, GetCondition condition, float priority, string name, bool bLooping) {
+	public Task Initialize(ActionFunction action, ConditionFunction condition, float priority, string name, bool bLooping) {
 		this.Action = new Action(action);
 		this.Condition = new Condition(condition);
 		this.Priority = priority;
@@ -28,7 +28,7 @@ public class Task : BTObject  {
 		return this;
 	}
 
-	public Task Initialize(GetAction action, GetCondition condition, float priority, string name) {
+	public Task Initialize(ActionFunction action, ConditionFunction condition, float priority, string name) {
 		this.Action = new Action(action);
 		this.Condition = new Condition(condition);
 		this.Priority = priority;
@@ -37,7 +37,7 @@ public class Task : BTObject  {
 		return this;
 	}
 
-	public Task Initialize(GetAction action, GetCondition condition, float priority) {
+	public Task Initialize(ActionFunction action, ConditionFunction condition, float priority) {
 		this.Action = new Action(action);
 		this.Condition = new Condition(condition);
 		this.Priority = priority;
@@ -45,14 +45,14 @@ public class Task : BTObject  {
 		return this;
 	}
 
-	public Task Initialize(GetAction action, GetCondition condition) {
+	public Task Initialize(ActionFunction action, ConditionFunction condition) {
 		this.Action = new Action(action);
 		this.Condition = new Condition(condition);
 
 		return this;
 	}
 
-	public Task Initialize(GetAction action, float priority) {
+	public Task Initialize(ActionFunction action, float priority) {
 		this.Action = new Action(action);
 		this.Condition = null;
 		this.Priority = priority;
@@ -60,7 +60,7 @@ public class Task : BTObject  {
 		return this;
 	}
 
-	public Task Initialize(GetAction action) {
+	public Task Initialize(ActionFunction action) {
 		this.Action = new Action(action);
 		this.Condition = null;
 

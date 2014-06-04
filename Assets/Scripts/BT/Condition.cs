@@ -1,24 +1,24 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public delegate bool GetCondition();
+public delegate bool ConditionFunction();
 
 public class Condition {
 	
-	public event GetCondition OnCondition;
+	public event ConditionFunction OnCondition;
 
 	public bool Result { get; set; }
 
 
-	public Condition(GetCondition condition) {
+	public Condition(ConditionFunction condition) {
 		this.AddCondition(condition);
 	}
 
-	public void AddCondition(GetCondition condition) {
+	public void AddCondition(ConditionFunction condition) {
 		this.OnCondition += condition;
 	}
 
-	public void RemoveCondition(GetCondition condition) {
+	public void RemoveCondition(ConditionFunction condition) {
 		this.OnCondition -= condition;
 	}
 
