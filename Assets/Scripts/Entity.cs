@@ -154,14 +154,7 @@ public class Entity : MonoBehaviour {
 		this.CurrentHitPoints = this.MaxHitPoints;
 		this.maxMoraleLevel = this.MaxHitPoints;
 		this.moraleLevel = this.maxMoraleLevel;
-	}
 
-	#endregion
-
-	#region VIRTUAL_METHODS 
-
-	// Use Start for initialization
-	protected virtual void Start() {
 		animationRef = this.animation;
 		if (animationRef == null)
 			animationRef = this.GetComponent<Animation>();
@@ -172,6 +165,13 @@ public class Entity : MonoBehaviour {
 		}
 
 	}
+
+	#endregion
+
+	#region VIRTUAL_METHODS 
+
+	// Use Start for initialization
+	protected virtual void Start() {}
 	
 	// Update is called once per frame
 	protected virtual void Update() {
@@ -273,6 +273,9 @@ public class Entity : MonoBehaviour {
 		float moraleDamage = damage + (damage * FleeThreshold);
 		if (this.moraleLevel - moraleDamage >= 0f) {
 			this.moraleLevel -= moraleDamage;
+		}
+		else {
+			this.moraleLevel = 0f;
 		}
 		
 		this.CurrentHitPoints -= damage;
