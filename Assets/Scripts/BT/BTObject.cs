@@ -14,19 +14,17 @@ public abstract class BTObject : MonoBehaviour {
 
 	public TaskState CurrentState = TaskState.TASK_WAITING;
 
-
+	public bool bDoneRunning = false;
 	public bool Looping = false;
-	public int Counter = 0;
+	public bool bPaused = false;
 
-	protected int counterCount = 1;
+	public int Counter = 0;
 
 	public float Priority = 0.5f;
 
-	public bool bDoneRunning = false;
-
 	public string BTName = "BTObject";
 
-	public bool bPaused = false;
+	protected int counterCount = 1;
 
 
 	public abstract void StartObject();

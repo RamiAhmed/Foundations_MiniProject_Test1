@@ -122,11 +122,13 @@ public class Selector : BTObject {
 						}
 					}
 					else {
+						this.Looping = false;
 						this.bDoneRunning = true;
 					}
 				}
-				else 
+				else {
 					this.bDoneRunning = true;
+				}
 			}
 		}
 	}

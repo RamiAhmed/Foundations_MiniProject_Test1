@@ -149,6 +149,7 @@ public class Task : BTObject  {
 						this.Action.CurrentState = Action.ActionState.ACTION_WAITING;
 					}
 					else {
+						this.Looping = false;
 						this.bDoneRunning = true;
 					}
 				}
