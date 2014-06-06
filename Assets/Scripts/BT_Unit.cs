@@ -87,7 +87,7 @@ public class BT_Unit : Entity {
 
 
 		Selector topSelector = this.gameObject.AddComponent<Selector>();
-		topSelector.Initialize(new BTObject[]{ fleeTask, attackTask, moveTask, findTargetTask });
+		topSelector.Initialize(fleeTask, attackTask, moveTask, findTargetTask);
 		topSelector.BTName = "BT Unit Selector";
 		topSelector.Looping = true;
 
